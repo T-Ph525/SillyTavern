@@ -1,7 +1,7 @@
-FROM node:lts-alpine3.19
+FROM ghcr.io/sillytavern/sillytavern:staging
 
 # Arguments
-ARG APP_HOME=/
+ARG APP_HOME=/home/node/app
 
 # Install system dependencies
 RUN apk add gcompat tini git
