@@ -27,7 +27,7 @@ COPY . ./
 # Copy default chats, characters and user avatars to <folder>.default folder
 RUN \
   rm -f "config.yaml" || true && \
-  ln -s "./config/config.yaml" "config.yaml" || true && \
+  ln -s "./default/config.yaml" "config.yaml" || true && \
   mkdir "config" || true
 
 # Cleanup unnecessary files
