@@ -1,4 +1,4 @@
-FROM ghcr.io/T-Ph525/sillytavern:staging
+FROM ghcr.io/SillyTavern/sillytavern:staging
 
 # Arguments
 ARG APP_HOME=/home/node/app
