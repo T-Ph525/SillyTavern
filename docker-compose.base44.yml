@@ -1,0 +1,34 @@
+services:
+  sillytavern:
+    image: node:22
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - "3000:8000"
+    environment:
+      - NODE_ENV=production
+      - FORCE_COLOR=1
+      - SILLYTAVERN_HEARTBEATINTERVAL=30
+    command:
+      - sh
+      - -ec
+      - |
+        npm ci --no-audit --no-fund --loglevel=error --no-progress --omit=dev --ignore-scripts
+        cp config/config.yaml /tmp/config-dev.yaml
+        sed -i 's/basicAuthMode: true/basicAuthMode: false/' /tmp/config-dev.yaml
+        if grep -q 'securityOverride' /tmp/config-dev.yaml; then
+          sed -i 's/securityOverride: false/securityOverride: true/' /tmp/config-dev.yaml
+        else
+          echo 'securityOverride: true' >> /tmp/config-dev.yaml
+        fi
+        ln -sf /tmp/config-dev.yaml config.yaml
+        npm run init
+        exec node --watch server.js --listen --heartbeatInterval 30 --browserLaunchEnabled false
+    healthcheck:
+      test: ["CMD", "node", "src/healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+    restart: on-failure
